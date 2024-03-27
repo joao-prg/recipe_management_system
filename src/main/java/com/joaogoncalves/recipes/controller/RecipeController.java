@@ -42,7 +42,6 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, Long>> create(@AuthenticationPrincipal final UserDetails userDetails,
                                                     @RequestBody @Valid final RecipeCreate recipeCreate) {
-        System.out.println(recipeCreate);
         final Long id = recipeService.create(userDetails.getUsername(), recipeCreate);
         return ResponseEntity.ok(Collections.singletonMap("id", id));
     }
