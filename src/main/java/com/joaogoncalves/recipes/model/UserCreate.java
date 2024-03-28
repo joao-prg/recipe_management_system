@@ -22,13 +22,11 @@ public class UserCreate {
 
     @ApiModelProperty(notes = "User's e-mail")
     @Email(message = "Invalid email format")
-    @Pattern(regexp = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email format")
-    @Column(nullable = false, unique = true)
     @NotBlank(message = "Email cannot be blank")
     private String email;
 
     @ApiModelProperty(notes = "User's password")
-    @Size(min = 8)
+    @Size(min = 8, max=30)
     @NotBlank(message = "Password cannot be blank")
     private String password;
 }
