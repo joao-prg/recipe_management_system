@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 
 import java.util.stream.Stream;
 
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableTestContainers
-public class UserControllerTests {
+public class UserControllerIT {
 
     @LocalServerPort
     private Integer port;
@@ -33,32 +34,32 @@ public class UserControllerTests {
         return Stream.of(
                 Arguments.of(
                         new UserCreate("test@test.com", "testtest"),
-                        200,
+                        HttpStatus.OK.value(),
                         null
                 ),
                 Arguments.of(
                         new UserCreate("test@test.com", "testtest"),
-                        400,
+                        HttpStatus.BAD_REQUEST.value(),
                         "User already exists! [e-mail: test@test.com]"
                 ),
                 Arguments.of(
                         new UserCreate("testtest.com", "testtest"),
-                        400,
+                        HttpStatus.BAD_REQUEST.value(),
                         "email: Invalid email format"
                 ),
                 Arguments.of(
                         new UserCreate("", "testtest"),
-                        400,
+                        HttpStatus.BAD_REQUEST.value(),
                         "email: Email cannot be blank"
                 ),
                 Arguments.of(
                         new UserCreate("test@test.com", "testtes"),
-                        400,
+                        HttpStatus.BAD_REQUEST.value(),
                         "password: size must be between 8 and 30"
                 ),
                 Arguments.of(
                         new UserCreate("test@test.com", ""),
-                        400,
+                        HttpStatus.BAD_REQUEST.value(),
                         "password: Password cannot be blank; password: size must be between 8 and 30"
                 )
         );
@@ -66,7 +67,7 @@ public class UserControllerTests {
 
     @ParameterizedTest
     @MethodSource("provideUserCreates")
-    public void testUserCreateWithError(final UserCreate userCreate,
+    public void testUserCreate(final UserCreate userCreate,
                                         final int expectedStatusCode,
                                         final String expectedExceptionMessage) {
         Response response =given()
@@ -81,3 +82,4 @@ public class UserControllerTests {
         }
     }
 }
+
