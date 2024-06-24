@@ -49,5 +49,6 @@ springBoot {
 
 test {
     useJUnitPlatform()
-    include 'com/joaogoncalves/recipes/controller/UserControllerTests.class'
+    include 'com/joaogoncalves/recipes/controller/UserControllerIT.class'
+    include 'com/joaogoncalves/recipes/controller/RecipeControllerIT.class'
 }

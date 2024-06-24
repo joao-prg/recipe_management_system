@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/actuator/**").hasRole("ADMIN")
-                .anyRequest().hasRole("USER")
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 .httpBasic(Customizer.withDefaults())
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
