@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +41,10 @@ public class RecipeController {
 
     @PostMapping(path="/new", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map<String, Long>> create(@AuthenticationPrincipal final UserDetails userDetails,
-                                                    @RequestBody @Valid final RecipeCreate recipeCreate) {
-        final Long id = recipeService.create(userDetails.getUsername(), recipeCreate);
-        return ResponseEntity.ok(Collections.singletonMap("id", id));
+    public ResponseEntity<Void> create(@AuthenticationPrincipal final UserDetails userDetails,
+                                       @RequestBody @Valid final RecipeCreate recipeCreate) {
+        recipeService.create(userDetails.getUsername(), recipeCreate);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(path="/{id}", produces = APPLICATION_JSON_VALUE)

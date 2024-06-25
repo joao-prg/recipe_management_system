@@ -4,10 +4,11 @@ import com.joaogoncalves.recipes.model.UserCreate;
 import com.joaogoncalves.testcontainers.EnableTestContainers;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,12 +25,13 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableTestContainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserControllerIT {
 
     @LocalServerPort
     private Integer port;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
     }
