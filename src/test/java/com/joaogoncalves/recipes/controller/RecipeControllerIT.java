@@ -59,7 +59,7 @@ public class RecipeControllerIT {
                         "test@testwrong.com",
                         "testtest",
                         HttpStatus.UNAUTHORIZED.value(),
-                        "User not found! [e-mail: %s]"
+                        "User not found! [e-mail: test@testwrong.com]"
                 )
         );
     }
