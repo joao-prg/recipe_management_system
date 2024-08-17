@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
@@ -44,5 +45,6 @@ public class RecipeRead {
     private String category;
 
     @PastOrPresent
+    @EqualsAndHashCode.Exclude
     private Instant date;
 }

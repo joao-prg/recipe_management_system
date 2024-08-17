@@ -45,16 +45,21 @@ public class RecipeService {
             return true;
         } else {
             throw new UserNotAuthorOfRecipeException(
-                    String.format("User %s is not the author of the recipe %s", user.getId(), recipeId)
+                    String.format(
+                            "User %s is not the author of the recipe [Id: %s]",
+                            email,
+                            recipeId
+                    )
             );
         }
     }
 
-    public void create(final String email, final RecipeCreate recipeCreate) {
+    public RecipeRead create(final String email, final RecipeCreate recipeCreate) {
         final User author = (User) userService.loadUserByUsername(email);
-        Recipe recipe = modelMapper.map(recipeCreate, Recipe.class);
-        recipe.setAuthor(author);
-        recipeRepository.save(recipe);
+        Recipe recipeToCreate = modelMapper.map(recipeCreate, Recipe.class);
+        recipeToCreate.setAuthor(author);
+        final Recipe savedRecipe = recipeRepository.save(recipeToCreate);
+        return modelMapper.map(savedRecipe, RecipeRead.class);
     }
 
     public RecipeRead read(final Long id) {
@@ -62,17 +67,30 @@ public class RecipeService {
         return modelMapper.map(recipe, RecipeRead.class);
     }
 
-    public void update(final String email, final Long id, final RecipeUpdate recipeUpdate) {
+    public RecipeRead update(
+            final String email,
+            final Long id,
+            final RecipeUpdate recipeUpdate
+    ) {
         final Recipe recipe = find(id);
-        if (userIsAuthorOfRecipe(email, recipe.getAuthor().getId(), recipe.getId())) {
+        if (userIsAuthorOfRecipe(email,
+                recipe.getAuthor().getId(),
+                recipe.getId())
+        ) {
             modelMapper.map(recipeUpdate, recipe);
-            recipeRepository.save(recipe);
+            final Recipe updatedRecipe = recipeRepository.save(recipe);
+            return modelMapper.map(updatedRecipe, RecipeRead.class);
         }
+        return null;
     }
 
     public void delete(final String email, final Long id) {
         final Recipe recipe = find(id);
-        if (userIsAuthorOfRecipe(email, recipe.getAuthor().getId(), recipe.getId())) {
+        if (userIsAuthorOfRecipe(
+                email,
+                recipe.getAuthor().getId(),
+                recipe.getId())
+        ) {
             recipeRepository.deleteById(id);
         }
     }

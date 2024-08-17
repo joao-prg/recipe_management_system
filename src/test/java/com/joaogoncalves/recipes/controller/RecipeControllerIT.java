@@ -1,14 +1,12 @@
 package com.joaogoncalves.recipes.controller;
 
 import com.joaogoncalves.recipes.model.RecipeCreate;
+import com.joaogoncalves.recipes.model.RecipeRead;
 import com.joaogoncalves.recipes.model.RecipeUpdate;
-import com.joaogoncalves.recipes.model.UserCreate;
-import com.joaogoncalves.recipes.service.RecipeService;
-import com.joaogoncalves.recipes.service.UserService;
 import com.joaogoncalves.testcontainers.EnableTestContainers;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -28,7 +25,6 @@ import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableTestContainers
@@ -38,31 +34,13 @@ public class RecipeControllerIT {
 
     @LocalServerPort
     private Integer port;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RecipeService recipeService;
-
-    private final static String testEmail = "test@test.com";
-
-    private final static String testPassword = "testtest";
+    private final static List<String> testEmails = List.of("test@test.com", "test2@test.com");
+    private final static List<String> testPasswords = List.of("testtest", "test2test2");
+    private final static String testEmailWrong = "test@testwrong.com";
 
     @BeforeAll
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
-        userService.create(new UserCreate(testEmail, testPassword));
-        recipeService.create(
-                testEmail,
-                new RecipeCreate(
-                    "onion soup",
-                    "onion soup",
-                    List.of("onion"),
-                    List.of("make the soup"),
-                    "soup"
-                )
-        );
     }
 
     static Stream<Arguments> provideRecipeCreatesWithError() {
@@ -75,8 +53,8 @@ public class RecipeControllerIT {
                                 List.of("make the soup"),
                                 "soup"
                         ),
-                        "test@testwrong.com",
-                        "testtest",
+                        testEmailWrong,
+                        testPasswords.get(0),
                         HttpStatus.UNAUTHORIZED.value(),
                         "Bad credentials"
                 ),
@@ -87,8 +65,8 @@ public class RecipeControllerIT {
                                 List.of("make the soup"),
                                 "soup"
                         ),
-                        testEmail,
-                        testPassword,
+                        testEmails.get(0),
+                        testPasswords.get(0),
                         HttpStatus.BAD_REQUEST.value(),
                         "name: Recipe name cannot be blank"
                 ),
@@ -99,8 +77,8 @@ public class RecipeControllerIT {
                                 List.of("make the soup"),
                                 "soup"
                         ),
-                        testEmail,
-                        testPassword,
+                        testEmails.get(0),
+                        testPasswords.get(0),
                         HttpStatus.BAD_REQUEST.value(),
                         "description: Recipe description cannot be blank"
                 ),
@@ -111,8 +89,8 @@ public class RecipeControllerIT {
                                 List.of("make the soup"),
                                 "soup"
                         ),
-                        testEmail,
-                        testPassword,
+                        testEmails.get(0),
+                        testPasswords.get(0),
                         HttpStatus.BAD_REQUEST.value(),
                         "ingredients: Recipe ingredients cannot be empty"
                 ),
@@ -123,8 +101,8 @@ public class RecipeControllerIT {
                                 List.of(),
                                 "soup"
                         ),
-                        testEmail,
-                        testPassword,
+                        testEmails.get(0),
+                        testPasswords.get(0),
                         HttpStatus.BAD_REQUEST.value(),
                         "directions: Recipe directions cannot be empty"
                 ),
@@ -136,10 +114,81 @@ public class RecipeControllerIT {
                                 List.of("make the soup"),
                                 ""
                         ),
-                        testEmail,
-                        testPassword,
+                        testEmails.get(0),
+                        testPasswords.get(0),
                         HttpStatus.BAD_REQUEST.value(),
                         "category: Recipe category cannot be blank"
+                )
+        );
+    }
+
+    static Stream<Arguments> provideRecipeReadsWithError() {
+        return Stream.of(
+                Arguments.of(
+                        1L,
+                        testEmailWrong,
+                        testPasswords.get(0),
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Bad credentials"
+                ),
+                Arguments.of(
+                        1000L,
+                        testEmails.get(0),
+                        testPasswords.get(0),
+                        HttpStatus.NOT_FOUND.value(),
+                        "Recipe not found! [Id: 1000]"
+                )
+        );
+    }
+
+    static Stream<Arguments> provideRecipeUpdatesWithError() {
+        return Stream.of(
+                Arguments.of(
+                        1L,
+                        testEmailWrong,
+                        testPasswords.get(0),
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Bad credentials"
+                ),
+                Arguments.of(
+                        1000L,
+                        testEmails.get(0),
+                        testPasswords.get(0),
+                        HttpStatus.NOT_FOUND.value(),
+                        "Recipe not found! [Id: 1000]"
+                ),
+                Arguments.of(
+                        1L,
+                        testEmails.get(1),
+                        testPasswords.get(1),
+                        HttpStatus.FORBIDDEN.value(),
+                        "User test2@test.com is not the author of the recipe [Id: 1]"
+                )
+        );
+    }
+
+    static Stream<Arguments> provideRecipeDeletesWithError() {
+        return Stream.of(
+                Arguments.of(
+                        1L,
+                        testEmailWrong,
+                        testPasswords.get(0),
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Bad credentials"
+                ),
+                Arguments.of(
+                        1000L,
+                        testEmails.get(0),
+                        testPasswords.get(0),
+                        HttpStatus.NOT_FOUND.value(),
+                        "Recipe not found! [Id: 1000]"
+                ),
+                Arguments.of(
+                        1L,
+                        testEmails.get(1),
+                        testPasswords.get(1),
+                        HttpStatus.FORBIDDEN.value(),
+                        "User test2@test.com is not the author of the recipe [Id: 1]"
                 )
         );
     }
@@ -154,15 +203,26 @@ public class RecipeControllerIT {
                 List.of("make the soup"),
                 "soup"
         );
-        given()
+        final RecipeRead expectedRecipe = new RecipeRead(
+                "tomato soup",
+                "tomato soup",
+                List.of("tomato"),
+                List.of("make the soup"),
+                "soup",
+                null
+        );
+        final RecipeRead actualRecipe = given()
                 .auth()
-                .basic(testEmail, testPassword)
+                .basic(testEmails.get(0), testPasswords.get(0))
                 .contentType(ContentType.JSON)
                 .body(recipeCreate)
                 .when()
                 .post("/api/recipe/new")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(RecipeRead.class);
+        Assertions.assertEquals(expectedRecipe, actualRecipe);
     }
 
     @ParameterizedTest
@@ -188,9 +248,17 @@ public class RecipeControllerIT {
     @Test
     @Order(3)
     public void testRecipeRead() {
-        final Response response = given()
+        final RecipeRead expectedRecipe = new RecipeRead(
+                "onion soup",
+                "onion soup",
+                List.of("onion"),
+                List.of("make the soup"),
+                "soup",
+                null
+        );
+        final RecipeRead actualRecipe = given()
                 .auth()
-                .basic(testEmail, testPassword)
+                .basic(testEmails.get(0), testPasswords.get(0))
                 .contentType(ContentType.JSON)
                 .pathParam("id", 1)
                 .when()
@@ -198,30 +266,29 @@ public class RecipeControllerIT {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
-                .response();
-        response.then().body("name", equalTo("onion soup"));
-        response.then().body("description", equalTo("onion soup"));
-        response.then().body("ingredients", hasItems("onion"));
-        response.then().body("directions", hasItems("make the soup"));
-        response.then().body("category", equalTo("soup"));
+                .as(RecipeRead.class);
+        Assertions.assertEquals(expectedRecipe, actualRecipe);
     }
 
-    @Test
+    @ParameterizedTest
     @Order(4)
-    public void testRecipeReadNotFound() {
+    @MethodSource("provideRecipeReadsWithError")
+    public void testRecipeReadWithError(final Long id,
+                                        final String userEmail,
+                                        final String userPassword,
+                                        final int expectedStatusCode,
+                                        final String expectedExceptionMessage) {
         given()
                 .auth()
-                .basic(testEmail, testPassword)
+                .basic(userEmail, userPassword)
                 .contentType(ContentType.JSON)
-                .pathParam("id", 1000)
+                .pathParam("id", id)
                 .when()
                 .get("/api/recipe/{id}")
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message",equalTo("Recipe not found! [Id: 1000]"));
+                .statusCode(expectedStatusCode)
+                .body("message",equalTo(expectedExceptionMessage));
     }
-
-    // add test read with wrong credentials
 
     @Test
     @Order(5)
@@ -233,15 +300,88 @@ public class RecipeControllerIT {
                 List.of("make the soup", "add the anchovies"),
                 "soup"
         );
-        given()
+        final RecipeRead expectedRecipe = new RecipeRead(
+                "onion soup",
+                "onion soup with anchovies",
+                List.of("onion", "anchovies"),
+                List.of("make the soup", "add the anchovies"),
+                "soup",
+                null
+        );
+        final RecipeRead actualRecipe = given()
                 .auth()
-                .basic(testEmail, testPassword)
+                .basic(testEmails.get(0), testPasswords.get(0))
                 .contentType(ContentType.JSON)
                 .pathParam("id", 1)
                 .body(recipeUpdate)
                 .when()
                 .put("/api/recipe/{id}")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(RecipeRead.class);
+        Assertions.assertEquals(expectedRecipe, actualRecipe);
     }
+
+    @ParameterizedTest
+    @Order(6)
+    @MethodSource("provideRecipeUpdatesWithError")
+    public void testRecipeUpdateWithError(final Long id,
+                                        final String userEmail,
+                                        final String userPassword,
+                                        final int expectedStatusCode,
+                                        final String expectedExceptionMessage) {
+        final RecipeUpdate recipeUpdate = new RecipeUpdate(
+                "onion soup",
+                "onion soup with anchovies",
+                List.of("onion", "anchovies"),
+                List.of("make the soup", "add the anchovies"),
+                "soup"
+        );
+        given()
+                .auth()
+                .basic(userEmail, userPassword)
+                .contentType(ContentType.JSON)
+                .pathParam("id", id)
+                .body(recipeUpdate)
+                .when()
+                .put("/api/recipe/{id}")
+                .then()
+                .statusCode(expectedStatusCode)
+                .body("message",equalTo(expectedExceptionMessage));
+    }
+
+    @Test
+    @Order(8)
+    public void testRecipeDelete() {
+        given()
+                .auth()
+                .basic(testEmails.get(0), testPasswords.get(0))
+                .pathParam("id", 1L)
+                .when()
+                .delete("/api/recipe/{id}")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @ParameterizedTest
+    @Order(7)
+    @MethodSource("provideRecipeDeletesWithError")
+    public void testRecipeDeleteWithError(final Long id,
+                                          final String userEmail,
+                                          final String userPassword,
+                                          final int expectedStatusCode,
+                                          final String expectedExceptionMessage) {
+        given()
+                .auth()
+                .basic(userEmail, userPassword)
+                .pathParam("id", id)
+                .when()
+                .delete("/api/recipe/{id}")
+                .then()
+                .statusCode(expectedStatusCode)
+                .body("message",equalTo(expectedExceptionMessage));
+    }
+
+    // TODO - search tests
 }

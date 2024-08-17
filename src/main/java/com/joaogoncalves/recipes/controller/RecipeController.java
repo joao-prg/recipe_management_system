@@ -39,32 +39,54 @@ public class RecipeController {
     private RecipeService recipeService;
 
 
-    @PostMapping(path="/new", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Void> create(@AuthenticationPrincipal final UserDetails userDetails,
-                                       @RequestBody @Valid final RecipeCreate recipeCreate) {
-        recipeService.create(userDetails.getUsername(), recipeCreate);
-        return ResponseEntity.ok().build();
+    @PostMapping(
+            path="/new",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<RecipeRead> create(
+            @AuthenticationPrincipal final UserDetails userDetails,
+            @RequestBody @Valid final RecipeCreate recipeCreate
+    ) {
+        return new ResponseEntity<>(
+                recipeService.create(userDetails.getUsername(), recipeCreate),
+                HttpStatus.CREATED
+        );
     }
 
-    @GetMapping(path="/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(
+            path="/{id}",
+            produces = APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RecipeRead> read(@PathVariable @Min(1) final Long id) {
         return ResponseEntity.ok(recipeService.read(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@AuthenticationPrincipal final UserDetails userDetails,
-                                       @PathVariable @Min(1) final Long id,
-                                       @Valid @RequestBody final RecipeUpdate recipeUpdate) {
-        recipeService.update(userDetails.getUsername(), id, recipeUpdate);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RecipeRead> update(
+            @AuthenticationPrincipal final UserDetails userDetails,
+            @PathVariable @Min(1) final Long id,
+            @Valid @RequestBody final RecipeUpdate recipeUpdate
+    ) {
+        return ResponseEntity.ok(
+                recipeService.update(
+                        userDetails.getUsername(),
+                        id,
+                        recipeUpdate
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal final UserDetails details,
-                                       @PathVariable @Min(1) final Long id) {
-        recipeService.delete(details.getUsername(), id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> delete(
+            @AuthenticationPrincipal final UserDetails userDetails,
+            @PathVariable @Min(1) final Long id
+    ) {
+        recipeService.delete(userDetails.getUsername(), id);
         return ResponseEntity.noContent().build();
     }
 

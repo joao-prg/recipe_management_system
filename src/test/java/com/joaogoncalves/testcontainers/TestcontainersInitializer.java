@@ -10,7 +10,7 @@ class TestcontainersInitializer implements ApplicationContextInitializer<Configu
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             DockerImageName.parse("postgres:15.1")
-    );
+    ).withInitScript("test_init_postgres.sql");
 
 
     static {
