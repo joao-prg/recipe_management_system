@@ -49,7 +49,7 @@ public class RecipeController {
 
     @GetMapping(path="/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RecipeRead> read(@PathVariable @Min(1)final Long id) {
+    public ResponseEntity<RecipeRead> read(@PathVariable @Min(1) final Long id) {
         return ResponseEntity.ok(recipeService.read(id));
     }
 

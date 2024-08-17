@@ -50,11 +50,11 @@ public class RecipeService {
         }
     }
 
-    public Long create(final String email, final RecipeCreate recipeCreate) {
+    public void create(final String email, final RecipeCreate recipeCreate) {
         final User author = (User) userService.loadUserByUsername(email);
         Recipe recipe = modelMapper.map(recipeCreate, Recipe.class);
         recipe.setAuthor(author);
-        return recipeRepository.save(recipe).getId();
+        recipeRepository.save(recipe);
     }
 
     public RecipeRead read(final Long id) {

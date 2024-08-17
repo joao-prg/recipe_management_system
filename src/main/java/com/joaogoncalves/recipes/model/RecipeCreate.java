@@ -19,22 +19,22 @@ import java.util.List;
 public class RecipeCreate {
 
     @ApiModelProperty(notes = "The name of the recipe")
-    @NotBlank(message = "Name cannot be blank")
+    @NotBlank(message = "Recipe name cannot be blank")
     private String name;
 
     @ApiModelProperty(notes = "The description of the recipe")
-    @NotBlank(message = "Description cannot be blank")
+    @NotBlank(message = "Recipe description cannot be blank")
     private String description;
 
     @ApiModelProperty(notes = "The ingredients of the recipe")
-    @NotEmpty(message = "Ingredients cannot be empty")
+    @NotEmpty(message = "Recipe ingredients cannot be empty")
     private List<String> ingredients;
 
     @ApiModelProperty(notes = "The directions of the recipe")
-    @NotEmpty(message = "Directions cannot be empty")
+    @NotEmpty(message = "Recipe directions cannot be empty")
     private List<String> directions;
 
     @ApiModelProperty(notes = "The category of the recipe")
-    @NotBlank(message = "Category cannot be blank")
+    @NotBlank(message = "Recipe category cannot be blank")
     private String category;
 }
