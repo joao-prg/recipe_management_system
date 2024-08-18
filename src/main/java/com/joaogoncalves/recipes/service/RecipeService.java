@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +30,7 @@ public class RecipeService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private Recipe find(final Long id) {
+    private Recipe find(final UUID id) {
         return recipeRepository
                 .findById(id)
                 .orElseThrow(() -> new RecipeNotFoundException(
@@ -38,8 +39,8 @@ public class RecipeService {
     }
 
     private boolean userIsAuthorOfRecipe(final String email,
-                                         final Long recipeOwnerId,
-                                         final Long recipeId) {
+                                         final UUID recipeOwnerId,
+                                         final UUID recipeId) {
         final User user = (User) userService.loadUserByUsername(email);
         if (Objects.equals(user.getId(), recipeOwnerId)) {
             return true;
@@ -62,14 +63,14 @@ public class RecipeService {
         return modelMapper.map(savedRecipe, RecipeRead.class);
     }
 
-    public RecipeRead read(final Long id) {
+    public RecipeRead read(final UUID id) {
         final Recipe recipe = find(id);
         return modelMapper.map(recipe, RecipeRead.class);
     }
 
     public RecipeRead update(
             final String email,
-            final Long id,
+            final UUID id,
             final RecipeUpdate recipeUpdate
     ) {
         final Recipe recipe = find(id);
@@ -84,7 +85,7 @@ public class RecipeService {
         return null;
     }
 
-    public void delete(final String email, final Long id) {
+    public void delete(final String email, final UUID id) {
         final Recipe recipe = find(id);
         if (userIsAuthorOfRecipe(
                 email,
