@@ -25,10 +25,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path="/register", produces = APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> create(@RequestBody @Valid final UserCreate userCreate) {
         userService.create(userCreate);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

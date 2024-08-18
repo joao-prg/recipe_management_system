@@ -64,14 +64,14 @@ public class UserControllerIT {
     @Test
     @Order(1)
     public void testUserCreate() {
-        final UserCreate userCreate = new UserCreate("test@test.com", "testtest");
+        final UserCreate userCreate = new UserCreate("random@random.com", "random12");
         given()
                 .contentType(ContentType.JSON)
                 .body(userCreate)
                 .when()
                 .post("/api/register")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @ParameterizedTest
