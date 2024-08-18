@@ -95,21 +95,20 @@ public class RecipeService {
         }
     }
 
-    public List<RecipeRead> searchRecipes(final String category, final String name) {
-        List<RecipeRead> recipes;
-        if (category != null) {
-            recipes = recipeRepository
-                    .findByCategoryIgnoreCaseOrderByDateDesc(category)
-                    .stream()
-                    .map(value -> modelMapper.map(value, RecipeRead.class))
-                    .collect(Collectors.toList());
-        } else {
-            recipes = recipeRepository.findByNameContainingIgnoreCaseOrderByDateDesc(name)
-                    .stream()
-                    .map(value -> modelMapper.map(value, RecipeRead.class))
-                    .collect(Collectors.toList());
-        }
-        return recipes;
+    public List<RecipeRead> searchByCategory(final String category) {
+        return recipeRepository
+                .findByCategoryIgnoreCaseOrderByDateDesc(category)
+                .stream()
+                .map(recipe -> modelMapper.map(recipe, RecipeRead.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<RecipeRead> searchByName(final String name) {
+        return recipeRepository
+                .findByNameContainingIgnoreCaseOrderByDateDesc(name)
+                .stream()
+                .map(recipe -> modelMapper.map(recipe, RecipeRead.class))
+                .collect(Collectors.toList());
     }
 }
 

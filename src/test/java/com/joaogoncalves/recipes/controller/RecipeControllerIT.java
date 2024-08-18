@@ -1,12 +1,13 @@
 package com.joaogoncalves.recipes.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import io.restassured.common.mapper.TypeRef;
 import com.joaogoncalves.recipes.model.RecipeCreate;
 import com.joaogoncalves.recipes.model.RecipeRead;
 import com.joaogoncalves.recipes.model.RecipeUpdate;
 import com.joaogoncalves.testcontainers.EnableTestContainers;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -193,6 +195,58 @@ public class RecipeControllerIT {
         );
     }
 
+    static Stream<Arguments> provideRecipeSearchesByCategory() {
+        return Stream.of(
+                Arguments.of(
+                        "soup",
+                        List.of(
+                            new RecipeRead(
+                                    "onion soup",
+                                    "onion soup with anchovies",
+                                    List.of("onion", "anchovies"),
+                                    List.of("make the soup", "add the anchovies"),
+                                    "soup",
+                                    null
+                            ),
+                            new RecipeRead(
+                                    "tomato soup",
+                                    "tomato soup",
+                                    List.of("tomato"),
+                                    List.of("make the soup"),
+                                    "soup",
+                                    null
+                            )
+                        )
+                ),
+                Arguments.of(
+                        "beef",
+                        List.of()
+                )
+        );
+    }
+
+    static Stream<Arguments> provideRecipeSearchesByName() {
+        return Stream.of(
+                Arguments.of(
+                        "onion",
+                        List.of(
+                                new RecipeRead(
+                                        "onion soup",
+                                        "onion soup with anchovies",
+                                        List.of("onion", "anchovies"),
+                                        List.of("make the soup", "add the anchovies"),
+                                        "soup",
+                                        null
+                                )
+                        )
+                ),
+                Arguments.of(
+                        "beef",
+                        List.of()
+                )
+        );
+    }
+
     @Test
     @Order(1)
     public void testRecipeCreate() {
@@ -217,12 +271,12 @@ public class RecipeControllerIT {
                 .contentType(ContentType.JSON)
                 .body(recipeCreate)
                 .when()
-                .post("/api/recipe/new")
+                .post("/api/recipes/new")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
                 .as(RecipeRead.class);
-        Assertions.assertEquals(expectedRecipe, actualRecipe);
+        assertThat(actualRecipe).isEqualToIgnoringGivenFields(expectedRecipe, "date");
     }
 
     @ParameterizedTest
@@ -239,7 +293,7 @@ public class RecipeControllerIT {
                 .contentType(ContentType.JSON)
                 .body(recipeCreate)
                 .when()
-                .post("/api/recipe/new")
+                .post("/api/recipes/new")
                 .then()
                 .statusCode(expectedStatusCode)
                 .body("message", equalTo(expectedExceptionMessage));
@@ -254,7 +308,7 @@ public class RecipeControllerIT {
                 List.of("onion"),
                 List.of("make the soup"),
                 "soup",
-                null
+                Instant.parse("2024-08-17T21:06:43.237200Z")
         );
         final RecipeRead actualRecipe = given()
                 .auth()
@@ -262,12 +316,12 @@ public class RecipeControllerIT {
                 .contentType(ContentType.JSON)
                 .pathParam("id", 1)
                 .when()
-                .get("/api/recipe/{id}")
+                .get("/api/recipes/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(RecipeRead.class);
-        Assertions.assertEquals(expectedRecipe, actualRecipe);
+        assertThat(actualRecipe).isEqualTo(expectedRecipe);
     }
 
     @ParameterizedTest
@@ -284,7 +338,7 @@ public class RecipeControllerIT {
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
                 .when()
-                .get("/api/recipe/{id}")
+                .get("/api/recipes/{id}")
                 .then()
                 .statusCode(expectedStatusCode)
                 .body("message",equalTo(expectedExceptionMessage));
@@ -315,12 +369,12 @@ public class RecipeControllerIT {
                 .pathParam("id", 1)
                 .body(recipeUpdate)
                 .when()
-                .put("/api/recipe/{id}")
+                .put("/api/recipes/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(RecipeRead.class);
-        Assertions.assertEquals(expectedRecipe, actualRecipe);
+        assertThat(actualRecipe).isEqualToIgnoringGivenFields(expectedRecipe, "date");
     }
 
     @ParameterizedTest
@@ -345,27 +399,27 @@ public class RecipeControllerIT {
                 .pathParam("id", id)
                 .body(recipeUpdate)
                 .when()
-                .put("/api/recipe/{id}")
+                .put("/api/recipes/{id}")
                 .then()
                 .statusCode(expectedStatusCode)
                 .body("message",equalTo(expectedExceptionMessage));
     }
 
     @Test
-    @Order(8)
+    @Order(12)
     public void testRecipeDelete() {
         given()
                 .auth()
                 .basic(testEmails.get(0), testPasswords.get(0))
                 .pathParam("id", 1L)
                 .when()
-                .delete("/api/recipe/{id}")
+                .delete("/api/recipes/{id}")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @ParameterizedTest
-    @Order(7)
+    @Order(11)
     @MethodSource("provideRecipeDeletesWithError")
     public void testRecipeDeleteWithError(final Long id,
                                           final String userEmail,
@@ -377,11 +431,81 @@ public class RecipeControllerIT {
                 .basic(userEmail, userPassword)
                 .pathParam("id", id)
                 .when()
-                .delete("/api/recipe/{id}")
+                .delete("/api/recipes/{id}")
                 .then()
                 .statusCode(expectedStatusCode)
                 .body("message",equalTo(expectedExceptionMessage));
     }
 
-    // TODO - search tests
+    @ParameterizedTest
+    @Order(7)
+    @MethodSource("provideRecipeSearchesByCategory")
+    public void testRecipeSearchByCategory(final String category,
+                                           final List<RecipeRead> expectedRecipes) {
+        final List<RecipeRead> actualRecipes = given()
+                .auth()
+                .basic(testEmails.get(0), testPasswords.get(0))
+                .contentType(ContentType.JSON)
+                .pathParam("category", category)
+                .when()
+                .get("/api/recipes/categories/{category}")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(new TypeRef<List<RecipeRead>>() {});
+        assertThat(actualRecipes)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("date")
+                .isEqualTo(expectedRecipes);
+    }
+
+    @Test
+    @Order(8)
+    public void testRecipeSearchByCategoryWithError() {
+        given()
+                .auth()
+                .basic(testEmailWrong, testPasswords.get(0))
+                .contentType(ContentType.JSON)
+                .pathParam("category", "soup")
+                .when()
+                .get("/api/recipes/categories/{category}")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .body("message",equalTo("Bad credentials"));
+    }
+
+    @ParameterizedTest
+    @Order(9)
+    @MethodSource("provideRecipeSearchesByName")
+    public void testRecipeSearchByName(final String name,
+                                       final List<RecipeRead> expectedRecipes) {
+        final List<RecipeRead> actualRecipes = given()
+                .auth()
+                .basic(testEmails.get(0), testPasswords.get(0))
+                .contentType(ContentType.JSON)
+                .pathParam("name", name)
+                .when()
+                .get("/api/recipes/names/{name}")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(new TypeRef<List<RecipeRead>>() {});
+        assertThat(actualRecipes)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("date")
+                .isEqualTo(expectedRecipes);
+    }
+
+    @Test
+    @Order(10)
+    public void testRecipeSearchByNameWithError() {
+        given()
+                .auth()
+                .basic(testEmailWrong, testPasswords.get(0))
+                .contentType(ContentType.JSON)
+                .pathParam("name", "onion")
+                .when()
+                .get("/api/recipes/names/{name}")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .body("message",equalTo("Bad credentials"));
+    }
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.Map;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/api/recipe")
+@RequestMapping("/api/recipes")
 @Validated
 public class RecipeController {
 
@@ -64,7 +65,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.read(id));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            path = "/{id}",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RecipeRead> update(
             @AuthenticationPrincipal final UserDetails userDetails,
@@ -90,14 +95,16 @@ public class RecipeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchRecipes(@RequestParam(required = false) String category,
-                                           @RequestParam(required = false) String name) {
-        if ((category == null && name == null) || (category != null && name != null)) {
-            return ResponseEntity.badRequest().build();
-        }
-        List<RecipeRead> recipes = recipeService.searchRecipes(category, name);
-        return ResponseEntity.ok(recipes);
+    @GetMapping("/categories/{category}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> searchByCategory(@PathVariable @NotBlank final String category) {
+        return ResponseEntity.ok(recipeService.searchByCategory(category));
+    }
+
+    @GetMapping("/names/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> searchByName(@PathVariable @NotBlank final String name) {
+        return ResponseEntity.ok(recipeService.searchByName(name));
     }
 }
 

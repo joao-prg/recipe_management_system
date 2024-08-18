@@ -45,6 +45,5 @@ public class RecipeRead {
     private String category;
 
     @PastOrPresent
-    @EqualsAndHashCode.Exclude
     private Instant date;
 }
