@@ -24,7 +24,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableTestContainers
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserControllerIT {
 
@@ -62,7 +61,6 @@ public class UserControllerIT {
     }
 
     @Test
-    @Order(1)
     public void testUserCreate() {
         final UserCreate userCreate = new UserCreate("random@random.com", "random12");
         given()
@@ -75,7 +73,6 @@ public class UserControllerIT {
     }
 
     @ParameterizedTest
-    @Order(2)
     @MethodSource("provideUserCreatesWithError")
     public void testUserCreateWithError(final UserCreate userCreate, final String expectedExceptionMessage) {
         given()
