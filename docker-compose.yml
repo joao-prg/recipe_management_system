@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  recipe-management-system:
+  recipe_management_system:
     build:
       context: .
       dockerfile: Dockerfile
@@ -27,8 +27,3 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:

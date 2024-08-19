@@ -9,20 +9,19 @@ buildscript {
 }
 
 plugins {
+    id 'application'
     id 'java'
     id 'org.springframework.boot' version '2.7.2'
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id "io.freefair.lombok" version "8.6"
 }
 
-group = 'com.joaogoncalves'
-version = '1.0-SNAPSHOT'
+group = 'com.joaogoncalves.recipes'
+version = '0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
-
-sourceSets.main.resources.srcDirs = ["src/resources"]
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -49,6 +48,4 @@ springBoot {
 
 test {
     useJUnitPlatform()
-    include 'com/joaogoncalves/recipes/controller/UserControllerIT.class'
-    include 'com/joaogoncalves/recipes/controller/RecipeControllerIT.class'
 }
