@@ -41,12 +41,12 @@ env:
 
 .PHONY: start-db
 start-db:
-	docker-compose up recipes_db -d
+	docker compose up recipes_db -d
 
 .PHONY: start-docker
 start-docker:
-	docker-compose up -d
+	docker compose up
 
 .PHONY: stop-docker
 stop-docker:
-	docker-compose down
+	docker compose down
