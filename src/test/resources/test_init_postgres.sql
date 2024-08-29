@@ -12,7 +12,7 @@ CREATE TABLE public.users (
 CREATE TABLE public.recipes (
 	id uuid DEFAULT uuid_generate_v4() NOT NULL,
 	category varchar(255) NULL,
-	"date" timestamp NULL,
+	"date" timestamp with time zone NULL,
 	description varchar(255) NULL,
 	"name" varchar(255) NULL,
 	author_id uuid NOT NULL,
@@ -38,7 +38,7 @@ INSERT INTO users (id, authority, email, password) VALUES
 ('b0731234-5159-414f-83a4-7711693b6cd8'::uuid, 'ROLE_USER', 'test2@test.com', '$2a$10$V7xMCTAXmB0sl/3.g0cEv.GCwv4ynCvkUjpqpnhYKUwJbRKB6sfFO');
 
 INSERT INTO recipes (id, category, "date", description,"name",author_id) VALUES
-('4b437406-abf0-459a-a22f-5c65f1cf102a'::uuid, 'soup','2024-08-17 22:06:43.2372','onion soup','onion soup','59eca8ae-d82d-44d3-9cb1-920a1cbcc9f7'::uuid);
+('4b437406-abf0-459a-a22f-5c65f1cf102a'::uuid, 'soup','2024-08-17 22:06:43.2372+00','onion soup','onion soup','59eca8ae-d82d-44d3-9cb1-920a1cbcc9f7'::uuid);
 
 INSERT INTO public.recipe_directions (recipe_id,directions) VALUES
 ('4b437406-abf0-459a-a22f-5c65f1cf102a'::uuid,'make the soup');

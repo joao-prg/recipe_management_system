@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.stream.Stream;
 
@@ -25,6 +26,7 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableTestContainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class UserControllerIT {
 
     @LocalServerPort

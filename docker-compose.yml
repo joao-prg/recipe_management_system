@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: recipe_management_system
     ports:
       - "8080:8080"
     depends_on:
@@ -27,3 +28,17 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+
+  recipe_management_system_test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    image: recipe_management_system_test
+    entrypoint: ["./gradlew", "test"]
+    working_dir: $PWD
+    environment:
+      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+    volumes:
+      - $PWD:$PWD
+      - /var/run/docker.sock:/var/run/docker.sock

@@ -10,9 +10,6 @@ ifneq (,$(wildcard .env))
     export $(shell sed 's/=.*//' .env)
 endif
 
-.PHONY: all
-all: build
-
 .PHONY: build
 build:
 	$(GRADLE) build
@@ -45,7 +42,10 @@ start-db:
 
 .PHONY: start-docker
 start-docker:
-	docker compose up
+	docker compose up recipe_management_system recipes_db -d
+
+run-docker-tests:
+	docker compose up recipe_management_system_test
 
 .PHONY: stop-docker
 stop-docker:

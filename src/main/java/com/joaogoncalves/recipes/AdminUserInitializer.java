@@ -4,11 +4,13 @@ import com.joaogoncalves.recipes.entity.User;
 import com.joaogoncalves.recipes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("!test")
 public class AdminUserInitializer implements CommandLineRunner {
 
     @Autowired

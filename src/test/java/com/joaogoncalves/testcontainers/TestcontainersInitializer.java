@@ -9,8 +9,9 @@ import org.testcontainers.utility.DockerImageName;
 class TestcontainersInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            DockerImageName.parse("postgres:15.1")
-    ).withInitScript("test_init_postgres.sql");
+            DockerImageName.parse("postgres:latest")
+    )
+            .withInitScript("test_init_postgres.sql");
 
 
     static {

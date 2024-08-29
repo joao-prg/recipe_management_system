@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 import java.util.List;
@@ -33,6 +34,7 @@ import static org.hamcrest.Matchers.equalTo;
 @EnableTestContainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("test")
 public class RecipeControllerIT {
 
     @LocalServerPort
@@ -309,7 +311,7 @@ public class RecipeControllerIT {
                 List.of("onion"),
                 List.of("make the soup"),
                 "soup",
-                Instant.parse("2024-08-17T21:06:43.237200Z")
+                Instant.parse("2024-08-17T22:06:43.237200Z")
         );
         final RecipeRead actualRecipe = given()
                 .auth()
