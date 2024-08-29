@@ -1,9 +1,5 @@
 GRADLE = ./gradlew
 PROJECT_NAME = recipe_management_system
-SRC_DIR = src/main/java
-TEST_DIR = src/test/java
-BUILD_DIR = build
-MAIN_CLASS = com.joaogoncalves.recipes.RecipesApplication
 
 ifneq (,$(wildcard .env))
     include .env
