@@ -32,6 +32,10 @@ env:
 	@echo $(POSTGRES_USER)
 	@echo $(POSTGRES_PASSWORD)
 
+.PHONY: docker-build
+docker-build:
+	docker compose build
+
 .PHONY: start-db
 start-db:
 	docker compose up recipes_db -d
@@ -40,6 +44,7 @@ start-db:
 start-docker:
 	docker compose up recipe_management_system recipes_db -d
 
+.PHONY: run-docker-tests
 run-docker-tests:
 	docker compose up recipe_management_system_test
 

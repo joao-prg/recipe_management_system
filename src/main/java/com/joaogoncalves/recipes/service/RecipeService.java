@@ -9,6 +9,7 @@ import com.joaogoncalves.recipes.model.RecipeCreate;
 import com.joaogoncalves.recipes.model.RecipeRead;
 import com.joaogoncalves.recipes.model.RecipeUpdate;
 import com.joaogoncalves.recipes.repository.RecipeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class RecipeService {
 
     @Autowired
@@ -31,11 +33,13 @@ public class RecipeService {
     private ModelMapper modelMapper;
 
     private Recipe find(final UUID id) {
-        return recipeRepository
+        final Recipe recipe = recipeRepository
                 .findById(id)
                 .orElseThrow(() -> new RecipeNotFoundException(
                         String.format("Recipe not found! [Id: %s]", id)
                 ));
+        log.debug(String.format("Recipe retrieved successfully [ID: %s]", id));
+        return recipe;
     }
 
     private boolean userIsAuthorOfRecipe(final String email,
@@ -43,6 +47,13 @@ public class RecipeService {
                                          final UUID recipeId) {
         final User user = (User) userService.loadUserByUsername(email);
         if (Objects.equals(user.getId(), recipeOwnerId)) {
+            log.debug(
+                    String.format(
+                            "User [e-mail: %s] is the author of recipe [ID: %s]",
+                            email,
+                            recipeId
+                    )
+            );
             return true;
         } else {
             throw new UserNotAuthorOfRecipeException(
@@ -60,6 +71,7 @@ public class RecipeService {
         Recipe recipeToCreate = modelMapper.map(recipeCreate, Recipe.class);
         recipeToCreate.setAuthor(author);
         final Recipe savedRecipe = recipeRepository.save(recipeToCreate);
+        log.debug(String.format("Recipe saved successfully [name: %s]", recipeCreate.getName()));
         return modelMapper.map(savedRecipe, RecipeRead.class);
     }
 
@@ -80,6 +92,7 @@ public class RecipeService {
         ) {
             modelMapper.map(recipeUpdate, recipe);
             final Recipe updatedRecipe = recipeRepository.save(recipe);
+            log.debug(String.format("Recipe saved successfully [ID: %s]", id));
             return modelMapper.map(updatedRecipe, RecipeRead.class);
         }
         return null;
@@ -93,23 +106,28 @@ public class RecipeService {
                 recipe.getId())
         ) {
             recipeRepository.deleteById(id);
+            log.debug(String.format("Recipe deleted successfully [ID: %s]", id));
         }
     }
 
     public List<RecipeRead> searchByCategory(final String category) {
-        return recipeRepository
+        final List<RecipeRead> recipes =  recipeRepository
                 .findByCategoryIgnoreCaseOrderByDateDesc(category)
                 .stream()
                 .map(recipe -> modelMapper.map(recipe, RecipeRead.class))
                 .collect(Collectors.toList());
+        log.debug(String.format("Found %d recipes for category %s", recipes.size(), category));
+        return recipes;
     }
 
     public List<RecipeRead> searchByName(final String name) {
-        return recipeRepository
+        final List<RecipeRead> recipes = recipeRepository
                 .findByNameContainingIgnoreCaseOrderByDateDesc(name)
                 .stream()
                 .map(recipe -> modelMapper.map(recipe, RecipeRead.class))
                 .collect(Collectors.toList());
+        log.debug(String.format("Found %d recipes for name %s", recipes.size(), name));
+        return recipes;
     }
 }
 
