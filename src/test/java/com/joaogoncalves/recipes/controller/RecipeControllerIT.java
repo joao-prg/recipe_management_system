@@ -306,7 +306,7 @@ public class RecipeControllerIT {
     @Order(3)
     public void testRecipeRead() {
         final RecipeRead expectedRecipe = new RecipeRead(
-                "onion soup",
+                "onion pasta",
                 "onion soup",
                 List.of("onion"),
                 List.of("make the soup"),

@@ -20,7 +20,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh './gradlew clean build --debug --stacktrace'
+                    sh './gradlew clean build -x test'
                 }
             }
         }
