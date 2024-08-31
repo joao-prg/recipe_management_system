@@ -44,14 +44,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins:
-    build:
-      context: ./jenkins
+    image: jenkins/jenkins:lts-jdk17
+    restart: on-failure
     ports:
       - "8080:8080"
       - "50000:50000"
-    working_dir: $PWD
     environment:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
     volumes:
-      - $PWD:$PWD
       - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home
+
+volumes:
+  jenkins_home:
