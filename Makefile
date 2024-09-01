@@ -38,16 +38,16 @@ docker-build:
 
 .PHONY: start-db
 start-db:
-	docker compose up recipes_db -d
+	docker compose -f docker-compose-dev.yml up recipes_db -d
 
 .PHONY: start-docker
 start-docker:
-	docker compose up recipe_management_system recipes_db -d
+	docker compose -f docker-compose-dev.yml up recipe_management_system recipes_db -d
 
 .PHONY: run-docker-tests
 run-docker-tests:
-	docker compose up recipe_management_system_test
+	docker compose -f docker-compose-dev.yml up recipe_management_system_test
 
 .PHONY: stop-docker
 stop-docker:
-	docker compose down
+	docker compose -f docker-compose-dev.yml down

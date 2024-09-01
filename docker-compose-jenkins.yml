@@ -15,6 +15,7 @@ services:
   jenkins:
     build:
       context: .
+      dockerfile: JenkinsDockerfile
     container_name: jenkins
     restart: unless-stopped
     ports:
