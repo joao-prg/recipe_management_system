@@ -49,7 +49,7 @@ services:
       dockerfile: Dockerfile
       target: build
     image: recipe_management_system_test
-    entrypoint: ["./gradlew", "test"]
+    entrypoint: ["./gradlew", "test", "--debug", "--stacktrace"]
     working_dir: $PWD
     environment:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
