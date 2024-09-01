@@ -21,7 +21,7 @@ pipeline {
             script {
                 sh 'docker-compose -f docker-compose-jenkins.yml down -v'
             }
-        },
+        }
         success {
             echo 'Build was successful!'
         }
