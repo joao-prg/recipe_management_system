@@ -7,7 +7,7 @@ pipeline {
                     sh 'docker-compose -f docker-compose-jenkins.yml up recipe_management_system_build --build'
                 }
             }
-        },
+        }
         stage('Test') {
             steps {
                 script {
