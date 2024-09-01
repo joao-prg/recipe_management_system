@@ -9,7 +9,7 @@ COPY src ./src
 
 RUN ./gradlew dependencies
 
-RUN ./gradlew build -x test
+RUN ./gradlew build -x test --debug --stacktrace
 
 FROM eclipse-temurin:17-jdk-alpine
 
