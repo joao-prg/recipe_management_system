@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: build
-    image: recipe_management_system_test
+    image: recipe_management_system_build
     working_dir: $PWD
     environment:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
