@@ -39,6 +39,7 @@ services:
     working_dir: $PWD
     environment:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+      TESTCONTAINERS_RYUK_DISABLED: true
     volumes:
       - $PWD:$PWD
       - /var/run/docker.sock:/var/run/docker.sock
@@ -49,7 +50,7 @@ services:
       dockerfile: Dockerfile
       target: build
     image: recipe_management_system_test
-    entrypoint: ["./gradlew", "test", "--debug", "--stacktrace"]
+    entrypoint: ["./gradlew", "test"]
     working_dir: $PWD
     environment:
       TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
