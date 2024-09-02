@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        TESTCONTAINERS_HOST_OVERRIDE = 'host.docker.internal'
+    }
     stages {
         stage('Build') {
             steps {
