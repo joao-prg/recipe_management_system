@@ -1,20 +1,17 @@
 pipeline {
     agent any
-    environment {
-        TESTCONTAINERS_HOST_OVERRIDE = 'host.docker.internal'
-    }
     stages {
         stage('Build') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-jenkins.yml up recipe_management_system_build --build'
+                    sh 'docker compose -f docker-compose-jenkins.yml up recipe_management_system_build --build --abort-on-container-exit'
                 }
             }
         }
         stage('Test') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-jenkins.yml up recipe_management_system_test --build'
+                    sh 'docker compose -f docker-compose-jenkins.yml up recipe_management_system_test --build --abort-on-container-exit'
                 }
             }
         }

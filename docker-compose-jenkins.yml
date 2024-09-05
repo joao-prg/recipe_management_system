@@ -42,6 +42,8 @@ services:
     volumes:
       - $PWD:$PWD
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins
 
   recipe_management_system_test:
     build:
@@ -57,6 +59,8 @@ services:
     volumes:
       - $PWD:$PWD
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins
 
 volumes:
   jenkins-data:
@@ -64,3 +68,4 @@ volumes:
 
 networks:
   jenkins:
+    driver: bridge
