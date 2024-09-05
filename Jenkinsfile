@@ -26,11 +26,11 @@ pipeline {
             }
         }
         success {
-            githubNotify context: 'Jenkins', status: 'SUCCESS'
+            //githubNotify context: 'Jenkins', status: 'SUCCESS'
             echo 'Build was successful!'
         }
         failure {
-            githubNotify context: 'Jenkins', status: 'FAILURE'
+            //githubNotify context: 'Jenkins', status: 'FAILURE'
             echo 'Build failed!'
         }
     }
