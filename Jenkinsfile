@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        TESTCONTAINERS_HOST_OVERRIDE = 'docker'
+        TESTCONTAINERS_RYUK_DISABLED = true
+    }
     stages {
         stage('Build') {
             steps {
