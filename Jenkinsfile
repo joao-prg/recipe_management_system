@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        TESTCONTAINERS_HOST_OVERRIDE = 'docker'
+        TESTCONTAINERS_HOST_OVERRIDE = 'localhost'
         TESTCONTAINERS_RYUK_DISABLED = true
     }
     stages {
