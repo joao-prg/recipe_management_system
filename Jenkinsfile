@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         TESTCONTAINERS_HOST_OVERRIDE = 'tcp://docker:2376'
-        TESTCONTAINERS_RYUK_DISABLED = true
     }
     stages {
         stage('Build') {
