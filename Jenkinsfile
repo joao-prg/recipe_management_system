@@ -27,15 +27,11 @@ pipeline {
             }
         }
         success {
-           withCredentials([string(credentialsId: 'e81a4652-c590-4ace-85ba-97d9173cd80c', variable: 'GITHUB_TOKEN')]) {
-                    githubNotify credentialsId: env.GITHUB_TOKEN, context: 'Jenkins', status: 'SUCCESS'
-           }
-           echo 'Build was successful!'
+            githubNotify credentialsId: env.GITHUB_CREDENTIALS_ID, context: 'Jenkins', status: 'SUCCESS'
+            echo 'Build was successful!'
         }
         failure {
-           withCredentials([string(credentialsId: 'e81a4652-c590-4ace-85ba-97d9173cd80c', variable: 'GITHUB_TOKEN')]) {
-                    githubNotify credentialsId: env.GITHUB_TOKEN, context: 'Jenkins', status: 'SUCCESS'
-           }
+            githubNotify credentialsId: env.GITHUB_CREDENTIALS_ID, context: 'Jenkins', status: 'FAILURE'
             echo 'Build failed!'
         }
     }
