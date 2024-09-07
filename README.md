@@ -121,13 +121,15 @@ This command will spin up the necessary containers and run the test suite inside
        sudo yum install git -y
        git clone https://github.com/joao-prg/recipe_management_system.git
         ```
-    2. Install docker, docker-compose, start docker and create the docker group
+    2. Install docker, docker-compose, add ec2-user to the docker group and start docker
        ```sh
+       sudo amazon-linux-extras install docker 
        sudo yum install docker -y
        sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
        sudo chmod +x /usr/local/bin/docker-compose
-       sudo service docker start
+       sudo usermod -a -G docker ec2-user
        newgrp docker
+       sudo service docker start
         ```
     3. Instead of installing Jenkins locally, launch it with docker
        ```sh
