@@ -116,10 +116,22 @@ This command will spin up the necessary containers and run the test suite inside
 
 1. See [Jenkins on AWS](https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
     1. Install git and clone this repository
-    2. Install docker and docker-compose
+        ```sh
+       sudo yum update -y
+       sudo yum install git -y
+       git clone https://github.com/joao-prg/recipe_management_system.git
+        ```
+    2. Install docker, docker-compose, start docker and create the docker group
+       ```sh
+       sudo yum install docker -y
+       sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+       sudo chmod +x /usr/local/bin/docker-compose
+       sudo service docker start
+       newgrp docker
+        ```
     3. Instead of installing Jenkins locally, launch it with docker
        ```sh
-        docker compose -f docker-compose-jenkins.yml up docker jenkins
+        docker-compose -f docker-compose-jenkins.yml up docker jenkins
         ```
 2. Once Jenkins is up and running:
    1. Make sure the following plugins are installed:
