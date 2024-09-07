@@ -111,7 +111,6 @@ This command will spin up the necessary containers and run the test suite inside
 - **`make run-docker-tests`**: Runs tests inside a Docker container.
 - **`make stop-docker`**: Stops and removes Docker containers.
 
-
 ## Deploy Jenkins on AWS
 
 1. See [Jenkins on AWS](https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
