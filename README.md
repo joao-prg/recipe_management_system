@@ -134,16 +134,20 @@ This command will spin up the necessary containers and run the test suite inside
         docker-compose -f docker-compose-jenkins.yml up docker jenkins
         ```
 2. Once Jenkins is up and running:
-   1. Make sure the following plugins are installed:
+   1. Make sure the following plugins are installed (Manage Jenkins -> Plugins):
       1. GitHub API Plugin
       2. GitHub Branch Source Plugin
       3. GitHub Integration Plugin
       4. GitHub plugin
       5. Pipeline GitHub Notify Step Plugin
       6. Pipeline: GitHub Groovy Libraries
-   2. Add a new credential (Username and password) with the github username and a Personal Access Token as password
-      1. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
-   3. Create a new multibranch pipeline pointing to this repository and with the credentials created in the previous step
+   2. Add new credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+      1. Kind->Username and password, with the github username and a Personal Access Token as password
+      2. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
+      3. Copy the credentials ID and set GITHUB_CREDENTIALS_ID in the Jenkinsfile with it
+   3. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
+      1. Point to this repository (Branch Sources -> Github)
+      2. Set credentials to the ones created in the previous step
 
 
 ## License
