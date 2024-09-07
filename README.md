@@ -129,7 +129,7 @@ This command will spin up the necessary containers and run the test suite inside
       4. GitHub plugin
       5. Pipeline GitHub Notify Step Plugin
       6. Pipeline: GitHub Groovy Libraries
-   2. Add a new credential with the github username and a Personal Access Token
+   2. Add a new credential (Username and password) with the github username and a Personal Access Token as password
       1. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
    3. Create a new multibranch pipeline pointing to this repository and with the credentials created in the previous step
 
