@@ -111,6 +111,29 @@ This command will spin up the necessary containers and run the test suite inside
 - **`make run-docker-tests`**: Runs tests inside a Docker container.
 - **`make stop-docker`**: Stops and removes Docker containers.
 
+
+## Deploy Jenkins
+
+1. See [Jenkins on AWS](https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
+    1. Install git and clone this repository
+    2. Install docker and docker-compose
+    3. Instead of installing Jenkins locally, launch it with docker
+       ```sh
+        docker compose -f docker-compose-jenkins.yml up docker jenkins
+        ```
+2. Once Jenkins is up and running:
+   1. Make sure the following plugins are installed:
+      1. GitHub API Plugin
+      2. GitHub Branch Source Plugin
+      3. GitHub Integration Plugin
+      4. GitHub plugin
+      5. Pipeline GitHub Notify Step Plugin
+      6. Pipeline: GitHub Groovy Libraries
+   2. Add a new credential with the github username and a Personal Access Token
+      1. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
+   3. Create a new multibranch pipeline pointing to this repository and with the credentials created in the previous step
+
+
 ## License
 
 This project is released into the public domain under [The Unlicense](LICENSE). This means you can freely use, modify, and distribute the code with no restrictions. For more details, see the [LICENSE](LICENSE) file.
