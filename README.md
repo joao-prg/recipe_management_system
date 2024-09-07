@@ -9,7 +9,6 @@ This project is a Recipe Management System built with Spring Boot. The applicati
 - [Building the Project](#building-the-project)
 - [Running the Application](#running-the-application)
 - [Running Tests](#running-tests)
-- [Docker Usage](#docker-usage)
 - [Makefile Targets](#makefile-targets)
 - [Deploy Jenkins on AWS](#deploy-jenkins-on-aws)
 - [License](#license)
