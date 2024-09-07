@@ -156,7 +156,6 @@ This command will spin up the necessary containers and run the test suite inside
    3. Set Content type to "application/json"
    4. Check "Just the push event"
 
-
 ## License
 
 This project is released into the public domain under [The Unlicense](LICENSE). This means you can freely use, modify, and distribute the code with no restrictions. For more details, see the [LICENSE](LICENSE) file.
