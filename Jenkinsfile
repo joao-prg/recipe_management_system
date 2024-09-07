@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         TESTCONTAINERS_HOST_OVERRIDE = 'tcp://docker:2376'
-        GITHUB_CREDENTIALS_ID = 'e81a4652-c590-4ace-85ba-97d9173cd80c'
     }
     stages {
         stage('Build') {
@@ -27,12 +26,22 @@ pipeline {
             }
         }
         success {
-            githubNotify credentialsId: env.GITHUB_CREDENTIALS_ID, context: 'Jenkins', status: 'SUCCESS'
-            echo 'Build was successful!'
+            script {
+                withCredentials([string(credentialsId: 'e81a4652-c590-4ace-85ba-97d9173cd80c', variable: 'GITHUB_TOKEN')]) {
+                    echo "Using GitHub Token: ${env.GITHUB_TOKEN}"  // Debug line
+                    githubNotify credentialsId: env.GITHUB_TOKEN, context: 'Jenkins', status: 'SUCCESS'
+                }
+                echo 'Build was successful!'
+            }
         }
         failure {
-            githubNotify credentialsId: env.GITHUB_CREDENTIALS_ID, context: 'Jenkins', status: 'FAILURE'
-            echo 'Build failed!'
+            script {
+                withCredentials([string(credentialsId: 'e81a4652-c590-4ace-85ba-97d9173cd80c', variable: 'GITHUB_TOKEN')]) {
+                    echo "Using GitHub Token: ${env.GITHUB_TOKEN}"  // Debug line
+                    githubNotify credentialsId: env.GITHUB_TOKEN, context: 'Jenkins', status: 'FAILURE'
+                }
+                echo 'Build failed!'
+            }
         }
     }
 }
