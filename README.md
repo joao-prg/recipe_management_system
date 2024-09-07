@@ -151,7 +151,7 @@ This command will spin up the necessary containers and run the test suite inside
       2. Set credentials to the ones created in the previous step
 3. Create Github Webhook
    1. Go to the repo page -> Settings -> Webhooks -> Add webhook
-   2. Set Payload URL to http://<jenkins-url>/github-webhook/
+   2. Set Payload URL to http://<jenkins-url>:<jenkins_port>/github-webhook/
    3. Set Content type to "application/json"
    4. Check "Just the push event"
 
