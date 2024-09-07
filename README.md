@@ -154,6 +154,7 @@ This command will spin up the necessary containers and run the test suite inside
    2. Set Payload URL to http://<jenkins-url>:<jenkins_port>/github-webhook/
    3. Set Content type to "application/json"
    4. Check "Just the push event" or edit which events will trigger a build
+   5. Edit the Security Group Rule so that port 8080 is available to the Github Webhook (set source to 0.0.0.0/0 for public access)
 
 ## License
 
