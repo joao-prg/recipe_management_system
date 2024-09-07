@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         TESTCONTAINERS_HOST_OVERRIDE = 'tcp://docker:2376'
-        GITHUB_CREDENTIALS_ID = '6ec04141-5a47-4eca-b934-d3c6ec8105ef'
+        GITHUB_CREDENTIALS_ID = 'e81a4652-c590-4ace-85ba-97d9173cd80c'
     }
     stages {
         stage('Build') {
