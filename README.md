@@ -145,7 +145,7 @@ This command will spin up the necessary containers and run the test suite inside
    2. Add new credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the github username and a Personal Access Token as password
       2. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
-      3. Copy the credentials ID and set GITHUB_CREDENTIALS_ID in the Jenkinsfile with it
+      3. Set the credentials ID to recipe_management_system_credentials
    3. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
       1. Point to this repository (Branch Sources -> Github)
       2. Set credentials to the ones created in the previous step
