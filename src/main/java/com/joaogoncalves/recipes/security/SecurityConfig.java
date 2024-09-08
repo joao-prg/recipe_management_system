@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/actuator/health").permitAll()
                 .antMatchers("/actuator/**").hasRole("ADMIN")
                 .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
