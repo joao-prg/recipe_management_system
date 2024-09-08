@@ -24,9 +24,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin || exit 1
-                        '''
+                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin || exit 1"
                         sh "docker build -t ${env.DOCKER_USER}/recipe_management_system:latest ."
                         sh "docker push ${env.DOCKER_USER}/recipe_management_system:latest"
                     }
