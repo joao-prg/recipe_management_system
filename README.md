@@ -10,6 +10,7 @@ This project is a Recipe Management System built with Spring Boot. The applicati
 - [Running the Application](#running-the-application)
 - [Running Tests](#running-tests)
 - [Makefile Targets](#makefile-targets)
+- [Deploy app on AWS](#deploy-app-on-aws)
 - [Deploy Jenkins on AWS](#deploy-jenkins-on-aws)
 - [License](#license)
 
@@ -110,6 +111,35 @@ This command will spin up the necessary containers and run the test suite inside
 - **`make start-docker`**: Starts the application and database containers.
 - **`make run-docker-tests`**: Runs tests inside a Docker container.
 - **`make stop-docker`**: Stops and removes Docker containers.
+
+## Deploy App on AWS
+
+1. Create an EC2 instance like explained [here](https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/) 
+2. Install git and clone this repository
+     ```sh
+    sudo yum update -y
+    sudo yum install git -y
+    git clone https://github.com/joao-prg/recipe_management_system.git
+     ```
+3. Install docker, docker-compose, add ec2-user to the docker group and start docker
+   ```sh
+   sudo amazon-linux-extras install docker 
+   sudo yum install docker -y
+   sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   sudo usermod -a -G docker ec2-user
+   newgrp docker
+   sudo service docker start
+    ```
+4. Set the following environment variables:
+   - ADMIN_EMAIL
+   - ADMIN_PASSWORD
+   - POSTGRES_USER
+   - POSTGRES_PASSWORD
+5. Launch app with docker
+    ```sh
+     docker-compose -f docker-compose-dev.yml up recipe_management_system recipes_db
+     ```
 
 ## Deploy Jenkins on AWS
 
