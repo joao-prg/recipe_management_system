@@ -5,8 +5,8 @@ CREATE TABLE public.users (
 	authority varchar(255) NULL,
 	email varchar(255) NOT NULL,
 	"password" varchar(255) NULL,
-	CONSTRAINT uk_6dotkott2kjsp8vw4d0m25fb7 UNIQUE (email),
-	CONSTRAINT users_pkey PRIMARY KEY (id)
+	CONSTRAINT uk_email UNIQUE (email),
+	CONSTRAINT pk_users_id PRIMARY KEY (id)
 );
 
 CREATE TABLE public.recipes (
@@ -16,20 +16,20 @@ CREATE TABLE public.recipes (
 	description varchar(255) NULL,
 	"name" varchar(255) NULL,
 	author_id uuid NOT NULL,
-	CONSTRAINT recipes_pkey PRIMARY KEY (id),
-	CONSTRAINT fkhcd6j9baovkdrh8gu9my8lco5 FOREIGN KEY (author_id) REFERENCES public.users(id)
+	CONSTRAINT pk_recipes_id PRIMARY KEY (id),
+	CONSTRAINT fk_recipes_users FOREIGN KEY (author_id) REFERENCES public.users(id)
 );
 
 CREATE TABLE public.recipe_directions (
 	recipe_id uuid NOT NULL,
 	directions varchar(255) NULL,
-	CONSTRAINT fkhvcukpdw0n8nnnwcdkw16v44s FOREIGN KEY (recipe_id) REFERENCES public.recipes(id)
+	CONSTRAINT fk_recipe_directions_recipes FOREIGN KEY (recipe_id) REFERENCES public.recipes(id)
 );
 
 CREATE TABLE public.recipe_ingredients (
 	recipe_id uuid NOT NULL,
 	ingredients varchar(255) NULL,
-	CONSTRAINT fkcqlw8sor5ut10xsuj3jnttkc FOREIGN KEY (recipe_id) REFERENCES public.recipes(id)
+	CONSTRAINT fk_recipe_ingredients_recipes FOREIGN KEY (recipe_id) REFERENCES public.recipes(id)
 );
 
 
