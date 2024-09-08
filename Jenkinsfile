@@ -23,9 +23,9 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKER_CREDENTIALS_ID) {
-                        sh "docker build -t recipe_management_system:latest ."
-                        sh "docker push recipe_management_system:latest"
+                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "docker build -t ${env.DOCKER_USER}/recipe_management_system:latest ."
+                        sh "docker push ${env.DOCKER_USER}/recipe_management_system:latest"
                     }
                 }
             }
