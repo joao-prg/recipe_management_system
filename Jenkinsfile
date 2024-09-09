@@ -41,7 +41,7 @@ pipeline {
                     def isHealthy = false
 
                     while (retryCount < maxRetries && !isHealthy) {
-                        def checkStatus = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/health', returnStdout: true).trim()
+                        def checkStatus = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/actuator/health', returnStdout: true).trim()
                         if (checkStatus == '200') {
                             isHealthy = true
                         } else {
