@@ -33,7 +33,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d --exit-code-from recipe_management_system'
+                    sh 'docker compose -f docker-compose-prod.yml down && docker-compose -f docker-compose-prod.yml config || exit 1
+&& docker compose -f docker-compose-prod.yml up --build -d'
                 }
             }
         }
