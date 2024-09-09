@@ -173,7 +173,7 @@ This command will spin up the necessary containers and run the test suite inside
       5. Pipeline GitHub Notify Step
       6. Pipeline GitHub Groovy Libraries
       7. Docker Pipeline
-   2. Add Github credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+   2. Add github credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the github username and a Personal Access Token as password
       2. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
       3. Set the credentials ID to recipe_management_system_credentials
@@ -183,7 +183,7 @@ This command will spin up the necessary containers and run the test suite inside
    4. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
          1. Point to this repository (Branch Sources -> Github)
          2. Set credentials to the ones created in the previous step
-3. Create Github Webhook
+3. Create github webhook
    1. Go to the repo page -> Settings -> Webhooks -> Add webhook
    2. Set Payload URL to http://<jenkins-url>:<jenkins_port>/github-webhook/
    3. Set Content type to "application/json"
