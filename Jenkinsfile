@@ -33,7 +33,18 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d'
+                    withCredentials([
+                        string(credentialsId: 'POSTGRES_USER_ID', variable: 'POSTGRES_USER'),
+                        string(credentialsId: 'POSTGRES_PASSWORD_ID', variable: 'POSTGRES_PASSWORD'),
+                        string(credentialsId: 'ADMIN_EMAIL_ID', variable: 'ADMIN_EMAIL'),
+                        string(credentialsId: 'ADMIN_PASSWORD_ID', variable: 'ADMIN_PASSWORD')
+                    ]) {
+                        sh '''
+                        set -e
+                        docker compose -f docker-compose-prod.yml down
+                        docker compose -f docker-compose-prod.yml up --build -d
+                        '''
+                    }
                 }
             }
         }
