@@ -138,7 +138,7 @@ This command will spin up the necessary containers and run the test suite inside
    - POSTGRES_PASSWORD
 5. Launch app with docker
     ```sh
-     docker-compose -f docker-compose-dev.yml up recipe_management_system recipes_db
+     docker-compose -f docker-compose-prod.yml up --build -d
      ```
 
 ## Deploy Jenkins on AWS
