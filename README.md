@@ -171,7 +171,7 @@ This command will spin up the necessary containers and run the test suite inside
       3. GitHub Integration
       4. GitHub
       5. Pipeline GitHub Notify Step
-      6. Pipeline: GitHub Groovy Libraries
+      6. Pipeline GitHub Groovy Libraries
       7. Docker Pipeline
    2. Add new credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the github username and a Personal Access Token as password

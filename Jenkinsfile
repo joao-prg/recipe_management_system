@@ -25,8 +25,15 @@ pipeline {
                 script {
                     docker.withRegistry('', env.DOCKER_CREDENTIALS_ID) {
                         def appImage = docker.build('joaopdrgoncalves/recipe_management_system:latest')
-                        appImage.push('latest')
+                        appImage.push()
                     }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d'
                 }
             }
         }
