@@ -33,14 +33,26 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh '''
-                    docker compose -f docker-compose-prod.yml down
-                    docker compose -f docker-compose-prod.yml up --build -d || exit_code=$?
-                    if [ $exit_code -ne 0 ]; then
-                        echo "docker-compose up failed with exit code $exit_code"
-                        exit $exit_code
-                    fi
-                    '''
+                    sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d'
+
+                    // Perform a health check with retries
+                    def retryCount = 0
+                    def maxRetries = 5
+                    def isHealthy = false
+
+                    while (retryCount < maxRetries && !isHealthy) {
+                        def checkStatus = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/health', returnStdout: true).trim()
+                        if (checkStatus == '200') {
+                            isHealthy = true
+                        } else {
+                            retryCount++
+                            sleep(time: 30, unit: 'SECONDS')
+                        }
+                    }
+
+                    if (!isHealthy) {
+                        error "Deployment failed! Health check returned status code ${checkStatus} after ${maxRetries} retries"
+                    }
                 }
             }
         }
