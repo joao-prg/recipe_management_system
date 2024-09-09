@@ -34,9 +34,12 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    set -e
                     docker compose -f docker-compose-prod.yml down
-                    docker compose -f docker-compose-prod.yml up --build -d
+                    docker compose -f docker-compose-prod.yml up --build -d || exit_code=$?
+                    if [ $exit_code -ne 0 ]; then
+                        echo "docker-compose up failed with exit code $exit_code"
+                        exit $exit_code
+                    fi
                     '''
                 }
             }
