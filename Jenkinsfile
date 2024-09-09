@@ -23,11 +23,9 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        docker.withRegistry('', env.DOCKER_CREDENTIALS_ID) {
-                            def appImage = docker.build("${DOCKER_USER}/recipe_management_system:latest")
-                            appImage.push('latest')
-                        }
+                    docker.withRegistry('', env.DOCKER_CREDENTIALS_ID) {
+                        def appImage = docker.build('joaopdrgoncalves/recipe_management_system:latest')
+                        appImage.push('latest')
                     }
                 }
             }
