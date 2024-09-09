@@ -33,34 +33,41 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d'
+                    withCredentials([
+                        string(credentialsId: 'POSTGRES_USER_ID', variable: 'POSTGRES_USER'),
+                        string(credentialsId: 'POSTGRES_PASSWORD_ID', variable: 'POSTGRES_PASSWORD'),
+                        string(credentialsId: 'ADMIN_EMAIL_ID', variable: 'ADMIN_EMAIL'),
+                        string(credentialsId: 'ADMIN_PASSWORD_ID', variable: 'ADMIN_PASSWORD')
+                    ]) {
+                        sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d'
 
-                    // Perform a health check with retries
+                        // Perform a health check with retries
 
-                    def retryCount = 0
-                    def maxRetries = 5
-                    def isHealthy = false
-                    def checkStatus
-                    def curlCommand = 'curl -s -o /dev/null -w "%{http_code}" http://your-app-url/health'
+                        def retryCount = 0
+                        def maxRetries = 5
+                        def isHealthy = false
+                        def checkStatus
+                        def curlCommand = 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/actuator/health'
 
-                    while (retryCount < maxRetries && !isHealthy) {
-                        try {
-                            checkStatus = sh(script: curlCommand, returnStdout: true).trim()
-                            if (checkStatus == '200') {
-                                isHealthy = true
-                            } else {
+                        while (retryCount < maxRetries && !isHealthy) {
+                            try {
+                                checkStatus = sh(script: curlCommand, returnStdout: true).trim()
+                                if (checkStatus == '200') {
+                                    isHealthy = true
+                                } else {
+                                    retryCount++
+                                    echo "Health check failed with status code ${checkStatus}. Retrying..."
+                                }
+                            } catch (Exception e) {
                                 retryCount++
-                                echo "Health check failed with status code ${checkStatus}. Retrying..."
+                                echo "Health check failed with error: ${e.message}. Retrying..."
                             }
-                        } catch (Exception e) {
-                            retryCount++
-                            echo "Health check failed with error: ${e.message}. Retrying..."
+                            sleep(time: 30, unit: 'SECONDS')
                         }
-                        sleep(time: 30, unit: 'SECONDS')
-                    }
 
-                    if (!isHealthy) {
-                        error "Deployment failed! Health check returned status code ${checkStatus} after ${maxRetries} retries"
+                        if (!isHealthy) {
+                            error "Deployment failed!"
+                        }
                     }
                 }
             }
