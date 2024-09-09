@@ -180,12 +180,7 @@ This command will spin up the necessary containers and run the test suite inside
    3. Add docker hub credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the docker hub username and password
       2. Set the credentials ID to docker_hub_credentials
-   4. Add the environment variables to jenkins with the following ids:
-      - ADMIN_EMAIL -> ADMIN_EMAIL_ID
-      - ADMIN_PASSWORD -> ADMIN_PASSWORD_ID
-      - POSTGRES_USER -> POSTGRES_USER_ID
-      - POSTGRES_PASSWORD -> POSTGRES_PASSWORD_ID
-   5. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
+   4. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
          1. Point to this repository (Branch Sources -> Github)
          2. Set credentials to the ones created in the previous step
 3. Create Github Webhook
