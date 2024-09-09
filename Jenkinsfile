@@ -27,6 +27,7 @@ pipeline {
                         docker.withRegistry('', env.DOCKER_CREDENTIALS_ID) {
                             def appImage = docker.build("${DOCKER_USER}/recipe_management_system:latest")
                             appImage.push('latest')
+                        }
                     }
                 }
             }
