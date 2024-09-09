@@ -32,15 +32,17 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                def deployStatus = sh(
-                    script: '''
-                    docker compose -f docker-compose-prod.yml down
-                    docker compose -f docker-compose-prod.yml up --build -d
-                    ''',
-                    returnStatus: true
-                )
-                if (deployStatus != 0) {
-                    error("Deployment failed. Exiting with status code ${deployStatus}.")
+                script {
+                    def deployStatus = sh(
+                        script: '''
+                        docker compose -f docker-compose-prod.yml down
+                        docker compose -f docker-compose-prod.yml up --build -d
+                        ''',
+                        returnStatus: true
+                    )
+                    if (deployStatus != 0) {
+                        error("Deployment failed. Exiting with status code ${deployStatus}.")
+                    }
                 }
             }
         }
