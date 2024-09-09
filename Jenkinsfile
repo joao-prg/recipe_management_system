@@ -36,19 +36,27 @@ pipeline {
                     sh 'docker compose -f docker-compose-prod.yml down && docker compose -f docker-compose-prod.yml up --build -d'
 
                     // Perform a health check with retries
+
                     def retryCount = 0
                     def maxRetries = 5
                     def isHealthy = false
                     def checkStatus
+                    def curlCommand = 'curl -s -o /dev/null -w "%{http_code}" http://your-app-url/health'
 
                     while (retryCount < maxRetries && !isHealthy) {
-                        checkStatus = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/actuator/health', returnStdout: true).trim()
-                        if (checkStatus == '200') {
-                            isHealthy = true
-                        } else {
+                        try {
+                            checkStatus = sh(script: curlCommand, returnStdout: true).trim()
+                            if (checkStatus == '200') {
+                                isHealthy = true
+                            } else {
+                                retryCount++
+                                echo "Health check failed with status code ${checkStatus}. Retrying..."
+                            }
+                        } catch (Exception e) {
                             retryCount++
-                            sleep(time: 30, unit: 'SECONDS')
+                            echo "Health check failed with error: ${e.message}. Retrying..."
                         }
+                        sleep(time: 30, unit: 'SECONDS')
                     }
 
                     if (!isHealthy) {
