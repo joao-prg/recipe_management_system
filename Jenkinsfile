@@ -42,7 +42,7 @@ pipeline {
                         '''
 
                         sh """
-                        ssh -i -oStrictHostKeyChecking=no ${SSH_KEY} ${remoteServer} '${deployCommands}'
+                        ssh -i ${SSH_KEY} -oStrictHostKeyChecking=no ${remoteServer} '${deployCommands}'
                         """
 
                         // Perform a health check with retries
