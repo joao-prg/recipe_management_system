@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'REMOTE_SERVER_SSH_KEY', keyFileVariable: 'SSH_KEY')]) {
-                        def remoteServer = 'joaogoncalves@82.155.122.226'
+                        def remoteServer = 'joaogoncalves@192.168.1.67'
                         def deployCommands = '''
                         set -e
                         docker compose -f /Users/joaogoncalves/Documents/code/recipe_management_system/docker-compose-prod.yml down
