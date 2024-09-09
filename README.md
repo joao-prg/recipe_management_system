@@ -166,12 +166,13 @@ This command will spin up the necessary containers and run the test suite inside
         ```
 2. Once Jenkins is up and running:
    1. Make sure the following plugins are installed (Manage Jenkins -> Plugins):
-      1. GitHub API Plugin
-      2. GitHub Branch Source Plugin
-      3. GitHub Integration Plugin
-      4. GitHub plugin
-      5. Pipeline GitHub Notify Step Plugin
+      1. GitHub API
+      2. GitHub Branch Source
+      3. GitHub Integration
+      4. GitHub
+      5. Pipeline GitHub Notify Step
       6. Pipeline: GitHub Groovy Libraries
+      7. Docker Pipeline
    2. Add new credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the github username and a Personal Access Token as password
       2. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
