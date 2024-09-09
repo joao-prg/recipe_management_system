@@ -34,8 +34,8 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    set -e
                     docker compose -f docker-compose-prod.yml down
-                    docker compose -f docker-compose-prod.yml config || exit 1
                     docker compose -f docker-compose-prod.yml up --build -d
                     '''
                 }
