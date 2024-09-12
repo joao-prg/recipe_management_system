@@ -42,14 +42,13 @@ pipeline {
                       ]
                     ) {
                         sh '''
+                            ssh -o StrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} $REMOTE_SERVER_USER@$REMOTE_SERVER_IP << 'EOF'
                             export REMOTE_SERVER_USER=${REMOTE_SERVER_USER}
                             export REMOTE_SERVER_IP=${REMOTE_SERVER_IP}
                             export ADMIN_EMAIL=${ADMIN_EMAIL}
                             export ADMIN_PASSWORD=${ADMIN_PASSWORD}
                             export POSTGRES_USER=${POSTGRES_USER}
                             export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
-                            ssh -o StrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} $REMOTE_SERVER_USER@$REMOTE_SERVER_IP << 'EOF'
                             set -e
                             docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml down
                             docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -d
