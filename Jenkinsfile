@@ -58,7 +58,7 @@ pipeline {
                         def maxRetries = 5
                         def isHealthy = false
                         def checkStatus
-                        def curlCommand = "curl -s -o /dev/null -w "%{http_code}" http://${REMOTE_SERVER_IP}:8081/actuator/health"
+                        def curlCommand = "curl -s -o /dev/null -w '%{http_code}' http://${REMOTE_SERVER_IP}:8081/actuator/health"
 
                         while (retryCount < maxRetries && !isHealthy) {
                             try {
