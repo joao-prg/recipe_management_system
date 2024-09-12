@@ -49,6 +49,14 @@ pipeline {
                             export ADMIN_PASSWORD=${ADMIN_PASSWORD}
                             export POSTGRES_USER=${POSTGRES_USER}
                             export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+                            echo "REMOTE_SERVER_USER: $REMOTE_SERVER_USER"
+                            echo "REMOTE_SERVER_IP: $REMOTE_SERVER_IP"
+                            echo "ADMIN_EMAIL: $ADMIN_EMAIL"
+                            echo "ADMIN_PASSWORD: $ADMIN_PASSWORD"
+                            echo "POSTGRES_USER: $POSTGRES_USER"
+                            echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
+
                             set -e
                             docker-compose -f /home/$REMOTE_SERVER_USER/recipe_management_system/docker-compose-prod.yml down
                             docker-compose -f /home/$REMOTE_SERVER_USER/recipe_management_system/docker-compose-prod.yml up --build -d
