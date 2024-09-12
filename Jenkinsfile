@@ -41,6 +41,12 @@ pipeline {
                         string(credentialsId: 'REMOTE_SERVER_IP', variable: 'REMOTE_SERVER_IP')
                       ]
                     ) {
+                        echo "REMOTE_SERVER_USER: ${REMOTE_SERVER_USER}"
+                        echo "REMOTE_SERVER_IP: ${REMOTE_SERVER_IP}"
+                        echo "ADMIN_EMAIL: ${ADMIN_EMAIL}"
+                        echo "ADMIN_PASSWORD: ${ADMIN_PASSWORD}"
+                        echo "POSTGRES_USER: ${POSTGRES_USER}"
+                        echo "POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}"
                         sh '''
                             ssh -T -o StrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} $REMOTE_SERVER_USER@$REMOTE_SERVER_IP << 'EOF'
                             export REMOTE_SERVER_USER=${REMOTE_SERVER_USER}
