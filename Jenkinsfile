@@ -34,11 +34,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'REMOTE_SERVER_SSH_KEY', keyFileVariable: 'SSH_KEY')]) {
-                        def remoteServer = 'joaogoncalves@192.168.1.67'
+                        def remoteServer = 'ec2-user@13.61.32.206'
                         def deployCommands = '''
                         set -e
-                        docker compose -f /Users/joaogoncalves/Documents/code/recipe_management_system/docker-compose-prod.yml down
-                        docker compose -f /Users/joaogoncalves/Documents/code/recipe_management_system/docker-compose-prod.yml up --build -d
+                        docker compose -f /home/ec2-user/recipe_management_system/docker-compose-prod.yml down
+                        docker compose -f /home/ec2-user/recipe_management_system/docker-compose-prod.yml up --build -d
                         '''
 
                         sh """
@@ -51,7 +51,7 @@ pipeline {
                         def maxRetries = 5
                         def isHealthy = false
                         def checkStatus
-                        def curlCommand = 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/actuator/health'
+                        def curlCommand = 'curl -s -o /dev/null -w "%{http_code}" http://13.61.32.206:8081/actuator/health'
 
                         while (retryCount < maxRetries && !isHealthy) {
                             try {
