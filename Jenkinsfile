@@ -41,21 +41,20 @@ pipeline {
                         string(credentialsId: 'REMOTE_SERVER_IP', variable: 'REMOTE_SERVER_IP')
                       ]
                     ) {
-                sh(script: """
-                export REMOTE_SERVER_USER=${REMOTE_SERVER_USER}
-                export REMOTE_SERVER_IP=${REMOTE_SERVER_IP}
-                export ADMIN_EMAIL=${ADMIN_EMAIL}
-                export ADMIN_PASSWORD=${ADMIN_PASSWORD}
-                export POSTGRES_USER=${POSTGRES_USER}
-                export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+                        def remoteServer = "${REMOTE_SERVER_USER}@${REMOTE_SERVER_IP}"
+                        def deployCommands = """
+                        set -e
+                        export ADMIN_EMAIL=${ADMIN_EMAIL}
+                        export ADMIN_PASSWORD=${ADMIN_PASSWORD}
+                        export POSTGRES_USER=${POSTGRES_USER}
+                        export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+                        docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml down
+                        docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -d
+                        """
 
-                ssh -oStrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} \\
-                \$REMOTE_SERVER_USER@\$REMOTE_SERVER_IP <<EOF
-set -e
-docker-compose -f /home/\$REMOTE_SERVER_USER/recipe_management_system/docker-compose-prod.yml down
-docker-compose -f /home/\$REMOTE_SERVER_USER/recipe_management_system/docker-compose-prod.yml up --build -d
-EOF
-                """)
+                        sh """
+                        ssh -oStrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} ${remoteServer} '${deployCommands}'
+                        """
 
                         // Perform a health check with retries
 
