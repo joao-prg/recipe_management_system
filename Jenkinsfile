@@ -41,12 +41,12 @@ pipeline {
                         string(credentialsId: 'REMOTE_SERVER_IP', variable: 'REMOTE_SERVER_IP')
                       ]
                     ) {
-                        def remoteServer = '{REMOTE_SERVER_USER}@${REMOTE_SERVER_IP}'
-                        def deployCommands = '''
+                        def remoteServer = "${REMOTE_SERVER_USER}@${REMOTE_SERVER_IP}"
+                        def deployCommands = """
                         set -e
                         docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml down
                         docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -e ADMIN_EMAIL=${ADMIN_EMAIL} -e ADMIN_PASSWORD=${ADMIN_PASSWORD} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -d
-                        '''
+                        """
 
                         sh """
                         ssh -oStrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} ${remoteServer} '${deployCommands}'
@@ -58,7 +58,7 @@ pipeline {
                         def maxRetries = 5
                         def isHealthy = false
                         def checkStatus
-                        def curlCommand = 'curl -s -o /dev/null -w "%{http_code}" http://${REMOTE_SERVER_IP}:8081/actuator/health'
+                        def curlCommand = "curl -s -o /dev/null -w "%{http_code}" http://${REMOTE_SERVER_IP}:8081/actuator/health"
 
                         while (retryCount < maxRetries && !isHealthy) {
                             try {
