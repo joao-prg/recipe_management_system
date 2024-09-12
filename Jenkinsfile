@@ -51,8 +51,8 @@ pipeline {
 
                             ssh -o StrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} $REMOTE_SERVER_USER@$REMOTE_SERVER_IP << 'EOF'
                             set -e
-                            docker-compose -f /home/$REMOTE_SERVER_USER/recipe_management_system/docker-compose-prod.yml down
-                            docker-compose -f /home/$REMOTE_SERVER_USER/recipe_management_system/docker-compose-prod.yml up --build -d
+                            docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml down
+                            docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -d
                             EOF
                         '''
 
