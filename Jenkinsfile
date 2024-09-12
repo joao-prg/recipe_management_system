@@ -44,8 +44,12 @@ pipeline {
                         def remoteServer = "${REMOTE_SERVER_USER}@${REMOTE_SERVER_IP}"
                         def deployCommands = """
                         set -e
+                        export ADMIN_EMAIL=${ADMIN_EMAIL}
+                        export ADMIN_PASSWORD=${ADMIN_PASSWORD}
+                        export POSTGRES_USER=${POSTGRES_USER}
+                        export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
                         docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml down
-                        docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -e ADMIN_EMAIL=${ADMIN_EMAIL} -e ADMIN_PASSWORD=${ADMIN_PASSWORD} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -d
+                        docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -d
                         """
 
                         sh """
