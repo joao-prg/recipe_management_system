@@ -37,8 +37,8 @@ pipeline {
                         def remoteServer = 'ec2-user@13.61.32.206'
                         def deployCommands = '''
                         set -e
-                        docker compose -f /home/ec2-user/recipe_management_system/docker-compose-prod.yml down
-                        docker compose -f /home/ec2-user/recipe_management_system/docker-compose-prod.yml up --build -d
+                        docker-compose -f /home/ec2-user/recipe_management_system/docker-compose-prod.yml down
+                        docker-compose -f /home/ec2-user/recipe_management_system/docker-compose-prod.yml up --build -d
                         '''
 
                         sh """
