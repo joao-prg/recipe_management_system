@@ -51,7 +51,7 @@ pipeline {
                         docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -d
                         """
 
-                        sh('ssh -oStrictHostKeyChecking=no -i $REMOTE_SERVER_SSH_KEY $REMOTE_SERVER_USER@$REMOTE_SERVER_IP $deployCommands')
+                        sh('ssh -oStrictHostKeyChecking=no -i ${env.REMOTE_SERVER_SSH_KEY} ${env.REMOTE_SERVER_USER}@${env.REMOTE_SERVER_IP} $deployCommands')
 
                         // Perform a health check with retries
 
