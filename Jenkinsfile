@@ -21,6 +21,9 @@ pipeline {
             }
         }
         stage('Push Docker Image') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     docker.withRegistry('', env.DOCKER_CREDENTIALS_ID) {
@@ -31,6 +34,9 @@ pipeline {
             }
         }
         stage('Deploy') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     withCredentials([
