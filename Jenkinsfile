@@ -41,7 +41,6 @@ pipeline {
                         string(credentialsId: 'REMOTE_SERVER_IP', variable: 'REMOTE_SERVER_IP')
                       ]
                     ) {
-                        def remoteServer = "${REMOTE_SERVER_USER}@${REMOTE_SERVER_IP}"
                         def deployCommands = """
                         set -e
                         export ADMIN_EMAIL=${ADMIN_EMAIL}
@@ -52,9 +51,7 @@ pipeline {
                         docker-compose -f /home/${REMOTE_SERVER_USER}/recipe_management_system/docker-compose-prod.yml up --build -d
                         """
 
-                        sh """
-                        ssh -oStrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} ${remoteServer} '${deployCommands}'
-                        """
+                        sh 'ssh -oStrictHostKeyChecking=no -i ${REMOTE_SERVER_SSH_KEY} ${REMOTE_SERVER_USER}@${REMOTE_SERVER_IP} ${deployCommands}'
 
                         // Perform a health check with retries
 
