@@ -9,14 +9,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-jenkins.yml up recipe_management_system_build --build --abort-on-container-exit'
+                    sh('docker compose -f docker-compose-jenkins.yml up recipe_management_system_build --build --abort-on-container-exit')
                 }
             }
         }
         stage('Test') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose-jenkins.yml up recipe_management_system_test --build --abort-on-container-exit'
+                    sh('docker compose -f docker-compose-jenkins.yml up recipe_management_system_test --build --abort-on-container-exit')
                 }
             }
         }
