@@ -162,7 +162,7 @@ This command will spin up the necessary containers and run the test suite inside
         ```
     3. Instead of installing Jenkins locally, launch it with docker
        ```sh
-        docker-compose -f docker-compose-jenkins.yml up docker jenkins
+        docker-compose -f docker-compose-jenkins.yml up docker jenkins --build -d
         ```
 2. Once Jenkins is up and running:
    1. Make sure the following plugins are installed (Manage Jenkins -> Plugins):
@@ -176,13 +176,28 @@ This command will spin up the necessary containers and run the test suite inside
    2. Add github credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the github username and a Personal Access Token as password
       2. Make sure the token has permissions for repo, admin:repo_hook, read:org, and workflow
-      3. Set the credentials ID to recipe_management_system_credentials
+      3. Set the credentials ID to RECIPE_MANAGEMENT_SYSTEM_CREDENTIALS
    3. Add docker hub credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
       1. Kind->Username and password, with the docker hub username and password
-      2. Set the credentials ID to docker_hub_credentials
-   4. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
-         1. Point to this repository (Branch Sources -> Github)
-         2. Set credentials to the ones created in the previous step
+      2. Set the credentials ID to DOCKER_HUB_CREDENTIALS
+   4. Add ssh private key to remote server (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+      1. Kind->SSH Username with private key
+      2. Set the credentials ID to REMOTE_SERVER_SSH_KEY
+   5. Add admin credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+      1. Kind->Username and password, with the admin username and password
+      2. Set the credentials ID to ADMIN_CREDENTIALS_ID
+   6. Add database credentials (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+      1. Kind->Username and password, with the postgres username and password
+      2. Set the credentials ID to DB_CREDENTIALS_ID
+   7. Add remote server user (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+      1. Kind->Secret text
+      2. Set the credentials ID to REMOTE_SERVER_USER
+   8. Add remote server IP (Manage Jenkins -> Credentials -> System -> Global credentials unrestricted -> Add credentials)
+      1. Kind->Secret text
+      2. Set the credentials ID to REMOTE_SERVER_IP
+   9. Create a new multibranch pipeline (Create a job -> Multibranch Pipeline)
+      1. Point to this repository (Branch Sources -> Github)
+      2. Set credentials to the github credentials
 3. Create github webhook
    1. Go to the repo page -> Settings -> Webhooks -> Add webhook
    2. Set Payload URL to http://<jenkins-url>:<jenkins_port>/github-webhook/
